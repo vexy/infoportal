@@ -1,32 +1,36 @@
-<script lang="ts">
-    import { PlatformStore } from "$lib/classes/UtilsStore";
-</script>
+<svelte:head>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" nonce="wSi4nIyg"></script>
+</svelte:head>
 
+<div id="fb-root"></div>
 <footer>
-    {#if $PlatformStore.isConnected}
-        <div>Made with ❤️ in 🇷🇸</div>
-        <div>Регистрованих корисника: <code>{$PlatformStore.totalUsers}</code></div>
-        <div>Број питања: <code>{$PlatformStore.totalQuestions}</code></div>
-    {:else}
-        <code>Version: 1.2</code>
-        <div>Made with ❤️ in 🇷🇸</div>
-    {/if}
+    <p>Made with ❤️ in 🇷🇸</p>
+    
+    <!-- LINKS (TODO: Update with font links)-->
+    <a href="/terms">Услови коришћења</a>
+    <!-- <a href="">Коришћени фонтови</a> 
+    <div>
+        <img src="/src/assets/github/github-mark.svg" alt="gh_logo" style="width: 20px; height: 20px"/>
+        <a href="https://github.com/vexy" target="_blank">Аутор платформе</a>
+    </div> -->
+    
+    <!-- Social: Twitter and Facebook buttons -->
+    <!-- <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-url="https://infoportal.app" data-hashtags="infoportal" data-show-count="false">Tweet</a>
+    <div class="fb-like" data-href="https://infoportal.app" data-width="" data-layout="" data-action="" data-size="" data-share="true"></div> -->
+
+    <code>Version: 1.5</code>
 </footer>
 
 <style>
     footer {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
         padding: 5px;
         background-image: linear-gradient(90deg, #ccc8ea 0%, #989ce8 50%, #ccc8e0);
-    }
-
-    footer div {
-        font-size: 12px;
-        color: #1edddeea;
-        /* padding-right: 15px; */
+        border-top: 1.5px solid rgb(225, 225, 225);
     }
 
     code {
@@ -36,14 +40,6 @@
 
     /* Small screens */
     @media all and (max-width: 500px) {
-        footer {
-            flex-direction: column;
-            gap: 2.5px;
-            background-image: linear-gradient(90deg, #230adf 33%, #5f618b 100%);
-        }
 
-        footer div {
-            color: rgba(255, 255, 255, 0.665);
-        }
     }
 </style>

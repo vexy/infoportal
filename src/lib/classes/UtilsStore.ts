@@ -3,7 +3,7 @@ import { PlatformMeta } from "$lib/classes/Models";
 
 // platform meta store
 function setupPlatormMetaStore() {
-    const { set, update, subscribe } = writable(
+    const { update, subscribe } = writable(
         new PlatformMeta(0, 0, false, false, false)
     );
 

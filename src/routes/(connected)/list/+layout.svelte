@@ -5,7 +5,7 @@
     <title>Infoportal.app | List</title>
         
     <!-- Google analytics script -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
     <script>
         // GTAG
         window.dataLayer = window.dataLayer || [];
@@ -13,7 +13,7 @@
         gtag('js', new Date());
     
         gtag('config', 'G-P0RR1V030Z');
-    </script>
+    </script> -->
 </svelte:head>
 
 <page-container>

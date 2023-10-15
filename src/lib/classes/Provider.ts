@@ -84,6 +84,7 @@ class ProviderCommons {
 export { ProviderCommons };
 
 //--
+import { NoSignerError } from "./Errors";
 import  MainPlatform from '../../MainPlatform.json';
 
 class ProviderServices {
@@ -95,6 +96,10 @@ class ProviderServices {
     }
 
     // MetaMask requires requesting permission to connect users accounts
+    /**
+     * Tries to obtain underlying signer (wallet; MetaMask)
+     * @returns `true` if connection is successfull `false` otherwise
+     */
     public async connectToMetamask(): Promise<boolean> {
         const _provider = new ethers.providers.Web3Provider(window.ethereum);
         const response = await _provider.send("eth_requestAccounts", []);
@@ -116,6 +121,9 @@ class ProviderServices {
         return Promise.reject();
     }
 
+    /**
+     * Connects to a local (blockchain) node
+     */
     public connectLocally() {
         const _provider = new ethers.providers.JsonRpcProvider();
         this.signer = _provider.getSigner();
@@ -123,23 +131,43 @@ class ProviderServices {
         console.log("<Provider> Connected to localhost (JSONRPC) provider, state updated...");
     }
 
+    /**
+     * Disconects the underlying signing provider.
+     * @description As this isn't techically possible in blockchain world, this basically just "nullifies" all the underlying values
+     */
     public disconnect(): void {
         PlatformStore.connect(false);
     }
 
+    /**
+     * Tries to create `ethers.Contract` instance using current signer
+     * @throws `NoSignerError` If there's an error with signer
+     * @returns Fully usable `ethers.Contract` facade.
+     */
     public fabricateContract(): ethers.Contract {
-        if(this.signer === undefined) { throw new Error("SignerDoesNotExist"); }
-        return new ethers.Contract(PUBLIC_CONTRACT_ADDRESS, MainPlatform.abi, this.signer);
-    }
-
-    public async signerAddress(): Promise<string> {
-        if(this.signer) {
-            return await this.signer.getAddress();
+        if(this.signer) { 
+            return new ethers.Contract(PUBLIC_CONTRACT_ADDRESS, MainPlatform.abi, this.signer);
         } else {
-            return "N/A";
+            // start the error chain by raising custom error
+            throw new NoSignerError("Unable to create contract as the signer is missing or no wallet connected.");
         }
     }
 
+    /**
+     * @returns A `string` based description of current signer or "N/A" if no signer is available
+     */
+    public async signerAddress(): Promise<string> {
+        if(this.signer) {
+            const address = await this.signer.getAddress();
+            return Promise.resolve(address);
+        } else {
+            return Promise.resolve("N/A");
+        }
+    }
+
+    /**
+     * @returns `true` if there's current signer available
+     */
     public isConnected(): boolean {
         // signer object will be something if there's a connection
         return this.signer !== undefined;

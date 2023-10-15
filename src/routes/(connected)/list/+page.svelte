@@ -3,11 +3,14 @@
 </svelte:head>
 
 <script lang="ts">
-    import { onMount } from "svelte";
     import QuestionsTable from "$lib/components/QuestionsTable.svelte";
-    import Contract from "$lib/classes/Utilities";
-    import type { QuestionInfoOutput } from "$lib/classes/Models";
     import Loader from '$lib/components/Loader.svelte';
+    import Contract from "$lib/classes/Utilities";
+    import { showDialog, DialogData } from "$lib/classes/DialogUtilities";
+    import type { QuestionInfoOutput } from "$lib/classes/Models";
+    import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
+    import { BigNumber } from "ethers";
 
     // data related stuff (TODO: preload initial set)
     let allQuestions: QuestionInfoOutput[] = [];
@@ -22,6 +25,13 @@
     // ui related stuff
     let isLoadingData: boolean = true;
     let hasErrored: boolean = false;
+    let questionToReport: number = 0;
+    let dialogContent: DialogData = new DialogData();
+
+    // clear questions in search and put back all questions
+    function extractEventValue(event: Event) {
+        return BigNumber.from(event.detail).toNumber();
+    }
 
     function performSearch() {
         if (searchTerm.length > 0) {
@@ -52,12 +62,48 @@
         }
     }
 
-    // clear questions in search and put back all questions
     function resetSearch() {
         searchTerm = "";
         showSearchResults = false
         questionsInSearch = [];
         tableQuestions = allQuestions;
+    }
+
+    function showReportConfirmation(event: Event) {
+        dialogContent.title = "Потврдите";
+        dialogContent.message = "Да ли заиста желите да обележите ово питање као не адекватно ?"
+        questionToReport = extractEventValue(event);
+        showDialog(true);
+    }
+
+    async function performReport() {
+        try {// to perform reporting
+            const hashApproval = await Contract.provideExtra(questionToReport, 2);
+            showDialog(false);  //close any prior instance;
+
+            //show reporting success to the user
+            dialogContent.title = "Резултат"
+            dialogContent.message = "Питање је усшешно обележено као \”не адекватно\”.";
+            dialogContent.hash = hashApproval;
+            showDialog(true);
+        } catch(err) {
+            // setup dialog error object
+            dialogContent.title = "Грешка";
+            dialogContent.message = "Дошло је до грешке приликом пријављивања овог питања. Покушајте поново."
+            dialogContent.hash = '';
+            showDialog(true)
+        }
+    }
+
+    async function refreshAfterReport() {
+        showDialog(false);
+        await fetchAllData();
+    }
+
+    function openQuestion(event: Event) {
+        const questionID = extractEventValue(event);
+        const questionRoute = `/questions/${questionID}`;
+        goto(questionRoute, {noScroll: true, keepFocus: true});
     }
 
     // fetches all data from the contract
@@ -84,9 +130,33 @@
 
     onMount(async () => {
         fetchAllData();
-        // allQuestions = await Contract.getAllQuestions();
     });
 </script>
+
+<dialog id="dialogBox">
+    <header>{dialogContent.title}</header>
+    <section>
+        <p>{dialogContent.message}</p>
+        {#if dialogContent.hash}
+            <span>Конфирмациони хеш трансакције:</span>
+            <code>{dialogContent.hash}</code>
+        {/if}
+    </section>
+    <footer>
+        {#if dialogContent.hash}
+            <button class="dialog-close-button" on:click={refreshAfterReport}>
+                Затвори
+            </button>
+        {:else}
+            <button class="report-confirmation-button" on:click={performReport}>
+                Да, обележи
+            </button>
+            <button class="dialog-close-button" on:click={() => showDialog(false)}>
+                Одустани
+            </button>
+        {/if}
+    </footer>
+</dialog>
 
 <search-area>
     <searchbar>
@@ -96,12 +166,12 @@
             </span>
             <input type="search" bind:value={searchTerm} placeholder="Претрага питања..."/>
         </form>
-            <button class="search-button" on:click={performSearch}>
-                <span class="material-symbols-outlined">
-                    mystery
-                </span>
-                <span-block>Пронађи</span-block>
-            </button>
+        <button class="search-button" on:click={performSearch}>
+            <span class="material-symbols-outlined">
+                mystery
+            </span>
+            <span-block>Пронађи</span-block>
+        </button>
     </searchbar>
     {#if showSearchResults}
         <search-results>
@@ -130,7 +200,11 @@
         </center-screen>
     {:else}
         {#if tableQuestions.length > 0}
-            <QuestionsTable dataSet={tableQuestions} />
+            <QuestionsTable
+                dataSet={tableQuestions} 
+                on:details={openQuestion}
+                on:report={showReportConfirmation}
+            />
         {/if}
         <!-- <p>Data shown</p> -->
     {/if}
@@ -169,9 +243,9 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
+        /* text-align: center; */
         gap: 1em;
-        height: 80vh;
+        height: 100%;
     }
 
     form {
@@ -238,6 +312,15 @@
     .cancel-button:hover {
         color: #fff;
         background-color: #2d6127;
+    }
+
+    .report-confirmation-button {
+        border: none;
+        border-radius: 0.33em;
+        padding: 1em;
+        color: #fff;
+        background-color: rgb(163, 0, 43);
+        cursor: pointer;
     }
 
     .try-again-button {

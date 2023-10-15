@@ -1,40 +1,21 @@
-<svelte:head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,300,0,0" />
-</svelte:head>
-
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import Popup from "$lib/components/Popup.svelte";
-    import Utilities from "$lib/classes/Utilities";
     import type { QuestionInfoOutput } from "$lib/classes/Models";
+    import { createEventDispatcher } from "svelte";
 
+    // external bindings
     export let dataSet: QuestionInfoOutput[];
-    let isShowingPopup = false;
 
-    async function performReport(questionID: number) {
-        //TODO: catch any errors and show them in popups
-        await Utilities.provideExtra(questionID, 2);
-        isShowingPopup = true;
-        goto(`/list`, {invalidateAll: true});
+    // custom event dispatcher
+    const event_dispatcher = createEventDispatcher();
+
+    function dispatchReport(questionID: number) {
+        event_dispatcher('report', questionID);
     }
 
-    function openQuestion(questionID: number) {
-        goto(`/questions/${questionID}`, {noScroll: true, keepFocus: true});
+    function dispatchShowDetails(questionID: number) {
+        event_dispatcher('details', questionID);
     }
 </script>
-
-<!-- TODO: CHANGE TO DEFAULT DIALOG -->
-
-<Popup show={isShowingPopup}>
-    <div slot="header">
-        Ваш избор је сачуван. Хвала !
-    </div>
-    <div slot="actions">
-        <button class="close-button" on:click={() => {isShowingPopup = false}}>
-            Затвори
-        </button>
-    </div>
-</Popup>
 
 <questions_container>
     {#each dataSet as question }
@@ -55,7 +36,7 @@
             </question-title>
 
             {#if question.hasVoted }
-                <button class="resultsbutton" on:click={() => openQuestion(question.id)}>
+                <button class="resultsbutton" on:click={dispatchShowDetails(question.id)}>
                     <same-row-block>
                         <span class="material-symbols-outlined">
                             stacked_bar_chart
@@ -65,13 +46,13 @@
                 </button>
             {:else}
                 <questionbody>
-                    <button class="votebutton" on:click={() => openQuestion(question.id)}>
+                    <button class="votebutton" on:click={dispatchShowDetails(question.id)}>
                         <span class="material-symbols-outlined">
                             info
                         </span>
                         <!-- Детаљи -->
                     </button>
-                    <button class="reportbutton" on:click={() => performReport(question.id)}>
+                    <button class="reportbutton" on:click={dispatchReport(question.id)}>
                         <span class="material-symbols-outlined">
                             flag_circle
                             <!-- report -->
@@ -182,19 +163,5 @@
     .resultsbutton:hover {
         background-color: #fff;
         color: #408852;
-    }
-
-    .close-button {
-        padding: 10px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        position: relative;
-        color: #fff;
-        background-color: #123;
-    }
-
-    .close-button:hover {
-        font-weight: bolder;
     }
 </style>

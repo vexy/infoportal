@@ -1,0 +1,50 @@
+#dialogBox {
+    border: none;
+    border-radius: 0.5em;
+    box-shadow: 0px 0px 10px 1px rgb(143, 143, 143);
+}
+#dialogBox::backdrop {
+    opacity: 1;
+    background-color: #fafa1a1a;
+    backdrop-filter: blur(2px);
+}
+
+#dialogBox header {
+    font-size: 2em;
+    text-align: center;
+    text-wrap: balance;
+}
+
+#dialogBox section {
+    margin: 1em;
+    flex-grow: 1;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+#dialogBox code {
+    background-color: #bbffbf;
+    color: #313131;
+}
+
+#dialogBox footer {
+    display: flex;
+    padding-top: 15px;
+    justify-content: space-around;
+}
+
+.dialog-close-button {
+    border: none;
+    border-radius: 0.33em;
+    padding: 1em;
+    cursor: pointer;
+    background-color: rgb(25, 71, 1);
+    color: white;
+}
+
+@media (min-width: 640px) {
+    #dialogBox {
+        max-width: 55vw;
+    }
+}

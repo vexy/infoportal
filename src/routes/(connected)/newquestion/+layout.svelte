@@ -5,14 +5,25 @@
     <title>Infoportal.app | New question</title>
 
     <!-- Google analytics script -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
   
       gtag('config', 'G-P0RR1V030Z');
-    </script>
+    </script> -->
 </svelte:head>
 
-<slot />
+<page-container>
+  <slot />
+</page-container>
+
+<style>
+  page-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+  }
+</style>
