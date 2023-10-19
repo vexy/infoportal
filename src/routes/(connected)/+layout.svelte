@@ -7,16 +7,12 @@
 <main>
 	<slot />
 </main>
-<Footer />
+<!-- <Footer /> -->
 
 <style>
     main {
 		display: flex;
 		flex-direction: column;
-		/* justify-content: stretch; */
-
-		/* position: absolute; */
-		/* width: 100vw;  */
 		height: 100vh;
 		overflow-y: scroll;
 

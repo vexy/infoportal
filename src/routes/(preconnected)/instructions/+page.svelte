@@ -1,9 +1,20 @@
 <svelte:head>
-    <!-- <link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        as="style"
-        crossorigin
-    /> -->
+    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
+    <meta name="keywords" content="connect, setup, configuration, blockchain, help, wallet, metamask, polygon, MATIC, mumbai">
+
+    <title>Infoportal - connection instructions</title>
 </svelte:head>
+<svelte:document>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-P0RR1V030Z');
+    </script>
+</svelte:document>
 
 <script lang="ts">
     import { ProviderCommons } from "$lib/classes/Provider";
@@ -90,7 +101,7 @@
 
     p {
         font-size: 13px;
-        color: #888888;
+        color: #d5d2d2;
     }
 
     divider {

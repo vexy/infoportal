@@ -1,3 +1,21 @@
+<svelte:head>
+    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
+    <meta name="keywords" content="question, poll, survey, opinions, infoportal, blockchain, options">
+
+    <title>Infoportal</title>
+</svelte:head>
+<svelte:document>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-P0RR1V030Z');
+    </script>
+</svelte:document>
+
 <script lang="ts">
     import Contract from '$lib/classes/Utilities';
     import { PlatformStore } from '$lib/classes/UtilsStore';
@@ -6,6 +24,7 @@
     import Loader from '$lib/components/Loader.svelte';
     import { onMount } from 'svelte';
     import { goto, invalidateAll } from '$app/navigation';
+    import { fade } from 'svelte/transition';
 
     // page data hooks and display helpers
     export let data;
@@ -74,8 +93,7 @@
     }
 
     function shareResults() {
-        const shareText = transformer.formulateShareText(questionInfo);
-        console.debug(shareText);
+        console.debug(transformer.shareText);
     }
 
     function roundNumber(number: number): string {
@@ -101,10 +119,11 @@
   
     <!-- action buttons -->
     <footer>
-      <button class="dialog-close-button" on:click={() => showDialog(false)}>Затвори</button>
-      {#if dialogMeta.hash}
-        <button class="show-results" on:click={() => refreshScores()}>Погледај резултате</button>
-      {/if}
+        {#if dialogMeta.hash}
+            <button class="show-results" on:click={() => refreshScores()}>Погледај резултате</button>
+        {:else}
+            <button class="dialog-close-button" on:click={() => showDialog(false)}>Затвори</button>
+        {/if}
     </footer>
 </dialog>
 
@@ -113,192 +132,233 @@
 {:else}
     <h1>{questionInfo.question.title}</h1>
 
-    <vote-panel>
-        <vstack>
-            {#if questionInfo.hasVoted}
-                <!-- <vstack> -->
-                    {#each questionInfo.question.labels as caption, index}
-                        <label for={caption}>{caption} ({roundNumber(transformer.scoresRatio[index])} %)</label>
-                        <meter id={caption} min="0" max="100" low="30" high="75" optimum="80" value={transformer.scoresRatio[index]} />
-                    {/each}
-                <!-- </vstack> -->
-            {:else}
-                {#each voteOptions as option }
-                    {#if questionInfo.question.labels[option] !== undefined }
-                        <hstack>
-                            <input type="radio" name="voting-options" value={option}/>
-                            {questionInfo.question.labels[option]}
-                        </hstack>
-                    {/if}
-                {/each}
-            {/if}
-        </vstack>
-        <hr>
-        <vstack>
-            {#if questionInfo.hasVoted}
-                <div style="font-size: 0.85em;">
-                    <hstack>
-                        <span>{roundNumber(transformer.extrasRatio[0])}%</span>
-                        <span>- Ништа од наведеног</span>
-                    </hstack>
-                    <hstack>
-                        <span>{roundNumber(transformer.extrasRatio[1])}%</span>
-                        <span>- Питање није довољно јасно</span>
-                    </hstack>
-                    <hstack>
-                        <span>{roundNumber(transformer.extrasRatio[2])}%</span>
-                        <span>- Не адекватно питање</span>
-                    </hstack>
-                </div>
-            {:else}
-                {#if showAdditionalOptions}
-                    <hstack>
-                        <input type="radio" name="voting-options" value=-1/>
-                        <span>Ништа од наведеног</span>
-                    </hstack>
-                    <hstack>
-                        <input type="radio" name="voting-options" value=-2/>
-                        <span>Питање није довољно јасно</span>
-                    </hstack>
-                    <hstack>
-                        <input type="radio" name="voting-options" value=-3/>
-                        <icon-span>
-                            <span>Не адекватно питање</span>
-                            <span class="material-symbols-outlined" style="color: #b40113">
-                                flag_circle
-                                <!-- report -->
-                            </span>
-                        </icon-span>
-                    </hstack>
+    <!-- QUESTIONS OPTIONS -->
+    {#if !questionInfo.hasVoted}
+        <question-options>
+            {#each voteOptions as option }
+                {#if questionInfo.question.labels[option] !== undefined }
+                    <div>
+                        <input type="radio" name="voting-options" value={option}/>
+                        {questionInfo.question.labels[option]}
+                    </div>
                 {/if}
-            {/if}
-        </vstack>
-        {#if questionInfo.hasVoted}
-            <hr>
-            <total-votes-panel>
-                <div>
-                    <span class="material-symbols-outlined">
-                        stacked_bar_chart
-                    </span>
-                    <span>Укупно одговора: </span>
-                    <!-- preview -->
-                    <b>{questionInfo.totalVoters}</b>
-                </div>
-                <div>
-                    <span class="material-symbols-outlined">
-                        clock_loader_80
-                    </span>
-                    <span>Проценат корисникa платформе: </span>
-                    <span><i>{totalVotePercentage}% </i></span>
-                </div>
-            </total-votes-panel>
-        {/if}
-    </vote-panel>
+            {/each}
+        </question-options>
+    {:else}
+        <!-- voting scores -->
+        <voting-scores>
+            {#each questionInfo.question.labels as caption, index}
+                <section>
+                    <div>
+                        <label for={caption}>{caption}</label>
+                        <span>{roundNumber(transformer.scoresRatio[index])} %</span>
+                    </div>
+                    <meter id={caption} min="0" max="100" low="30" high="75" optimum="80" value={transformer.scoresRatio[index]} />
+                </section>
+            {/each}
+        </voting-scores>
+    
+        <!-- extras score -->
+        <extras-score>
+            <div>
+                <span>Ништа од наведеног: </span>
+                <span>{roundNumber(transformer.extrasRatio[0])}%</span>
+            </div>
+            <div>
+                <span>Питање није довољно јасно: </span>
+                <span>{roundNumber(transformer.extrasRatio[1])}%</span>
+            </div>
+            <div>
+                <span>Не адекватно питање: </span>
+                <span>{roundNumber(transformer.extrasRatio[2])}%</span>
+            </div>
+        </extras-score>
 
-    <centered>
+        <!-- totals -->
+        <totals-panel>
+            <div>
+                <span class="material-symbols-outlined">
+                    stacked_bar_chart
+                </span>
+                <span>Укупно одговора: <b>{questionInfo.totalVoters}</b></span>
+            </div>
+            <div>
+                <span class="material-symbols-outlined">
+                    clock_loader_80
+                </span>
+                <span><i>{totalVotePercentage}%</i></span>
+                <span>корисникa платформе</span>
+            </div>
+        </totals-panel>
+    {/if}
+
+    <!-- ADDITIONAL OPTIONS -->
+    {#if showAdditionalOptions}
+        <additional-options in:fade={{duration: 200, delay: 75}}>
+            <div>
+                <input type="radio" name="voting-options" value=-1/>
+                <span>Ништа од наведеног</span>
+            </div>
+            <div>
+                <input type="radio" name="voting-options" value=-2/>
+                <span>Питање није довољно јасно</span>
+            </div>
+            <div>
+                <input type="radio" name="voting-options" value=-3/>
+                <div>
+                    <span>Не адекватно питање</span>
+                    <span class="material-symbols-outlined" style="color: #b40113">
+                        flag_circle
+                        <!-- report -->
+                    </span>
+                </div>
+            </div>
+        </additional-options>
+    {:else}
+        {#if !questionInfo.hasVoted}
+            <show-additionals>
+                <button class="additional-options-button" on:click={() => {showAdditionalOptions = true}}>
+                    <span class="material-symbols-outlined">
+                        privacy_tip
+                    </span>
+                    <span>Додатне опције</span>
+                </button>
+            </show-additionals>
+        {/if}
+    {/if}
+    
+    <!-- ACTION BUTTONS -->
+    <action-stack>
         {#if isSavingData}
             <Loader message="Слање одговора у току..." />
         {:else}
-            <action-buttons>
-                <button class="back-button" on:click={() => { goto('/list') }}>Назад</button>
-                {#if questionInfo.hasVoted}
-                    <!-- <button class="back-button" on:click={shareResults}>Подели</button> -->
-                {:else}
-                    <button class="additional-options-button" on:click={() => {showAdditionalOptions = !showAdditionalOptions}}>
-                        <span class="material-symbols-outlined">
-                            privacy_tip
-                        </span>
-                        <span>Додатне опције</span>
-                    </button>
-                    <button class="vote-button" on:click={performVote}>
-                        <icon-span>
-                            <span class="material-symbols-outlined">
-                                <!-- how_to_vote -->
-                                send
-                            </span>
-                            <span>Пошаљи</span>
-                        </icon-span>
-                    </button>
-                {/if}
-            </action-buttons>
+            <button class="back-button" on:click={() => { goto('/list') }}>Назад</button>
+            {#if questionInfo.hasVoted}
+                <!-- <button class="back-button" on:click={shareResults}>Подели</button> -->
+            {:else}
+                <button class="vote-button" on:click={performVote}>
+                    <span class="material-symbols-outlined">
+                        how_to_vote
+                        <!-- send -->
+                    </span>
+                    <span>Пошаљи</span>
+                </button>
+            {/if}
         {/if}
-    </centered>
+    </action-stack>
 {/if}
 
 <style>
-    vote-panel {
+    question-options {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        padding-inline: 0.5em;
+        align-self: center;
+        gap: 0.25em;
     }
 
-    hr {
-        border: none;
-        width: 65vw;
-        border-bottom: 1px dotted #ffffff45;
-        margin: 1em;
-    }
-
-    vstack {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    hstack {
+    question-options div {
         display: flex;
         flex-direction: row;
-        align-items: center;
-        gap: 3.5px;
+        align-items: baseline;
+        gap: 0.5em;
+    }
+
+    meter {
+        width: auto;
+    }
+
+    voting-scores {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin-inline: auto;
+        gap: 0.25em;
+        max-width: 95vw;
+    }
+
+    voting-scores section {
+        display: flex;
+        flex-direction: column;
     }
     
-    icon-span {
+    voting-scores section div {
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1.5em;
+    }
+
+    extras-score {
+        padding-block: 0.5em;
+        margin-block: 0.5em;
+        margin-inline: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25em;
+
+        border-top: 0.5px dotted #c7c7c5;
+        border-bottom: 0.5px dotted #f1efd3;
+    }
+
+    extras-score div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1em;
+    }
+
+    totals-panel {
+        margin-block: 1em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    totals-panel div {
+        display: flex;
+        flex-direction: row;
         align-items: center;
         gap: 0.25em;
     }
-    
-    centered {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: center;
-    }
 
-    total-votes-panel {
+    additional-options {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: stretch;
+        margin: auto;
+        margin-top: 1em;
+        padding: 1em;
+        gap: 0.5em;
+        border-top: 0.5px dotted #e2e2e2d2;
+        border-bottom: 0.5px dotted #bfbfbfd2;
+        /* background-color: #137a22; */
     }
 
-    total-votes-panel div {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-    }
-
-    total-votes-panel div span {
-        margin: 5px;
-    }
-    
-    action-buttons {
+    additional-options div {
         display: flex;
         flex-direction: row;
-        align-content: center;
-        justify-content: space-around;
-        /* margin: 1em; */
+        align-items: center;
+        gap: 0.5em
     }
 
-    h1 {
-        font-size: 2rem;
-        text-align: center;
-        word-wrap: break-word;
+    show-additionals {
+        margin-top: 1em;
+        padding-top: 0.5em;
+        align-self: center;
+        border-top: 0.5px dotted #b0b1b2;
+    }
+
+    action-stack {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
     }
 
     .additional-options-button {
+        align-self: center;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -322,14 +382,17 @@
     }
 
     .vote-button {
-        min-width: 85px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        outline: none;
+        gap: 0.15em;
         height: 3em;
-        margin-block: 0.75em;
-        color: #fff;
         font-weight: bold;
+        color: #fff;
         cursor: pointer;
-        border-radius: 5px;
         border: none;
+        border-radius: 5px;
         background: #137a22;
         box-shadow: 0 5px #163901;
         transition: all 0.3s ease;

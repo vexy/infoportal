@@ -1,3 +1,21 @@
+<svelte:head>
+    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
+    <meta name="keywords" content="metamask, blockchain, vote, poll, questions, opinions, infoportal">
+
+    <title>Infoportal</title>
+</svelte:head>
+<svelte:document>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-P0RR1V030Z');
+    </script>
+</svelte:document>
+
 <script lang="ts">
     import { Provider } from "$lib/classes/Provider";
     import { showDialog } from "$lib/classes/DialogUtilities";
@@ -42,12 +60,8 @@
     <span>Повежи MetaMask</span>
 </button>
     
-<p>За почетак употребе, повежите Ваш <i>MetaMask</i> новчаник...</p>
-
-<div>
-    <p><a href="/terms">Услови коришћења</a></p>
-    <p><a href="/instructions">Упутства за употребу</a></p>
-</div>
+<p>За почетак употребе, повежите Ваш <i>MetaMask</i> новчаник, или погледајте <a href="/instructions">упутства за повезивање</a>.</p>
+<p><a href="/terms">Услови коришћења</a></p>
 
 <style>
     h1 {
@@ -90,10 +104,9 @@
         text-align: center;
     }
 
-    div {
-        display: flex;
-        align-content: space-between;
-    }
+    /* div {
+        align-self: center;
+    } */
 
     .metamask-button {
         opacity: 0;

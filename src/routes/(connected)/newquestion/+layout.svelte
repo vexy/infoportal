@@ -1,19 +1,21 @@
 <svelte:head>
-    <meta name="description" content="Infoportal.app | Create your questions, ask masses, talk." />
-		<meta name="keywords" content="question, MATIC, vote, blockchain, poll, survey, results, infoportal">
+    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
+    <meta name="keywords" content="new, question, blockchain, options, poll, survey, infoportal">
 
-    <title>Infoportal.app | New question</title>
-
-    <!-- Google analytics script -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-  
-      gtag('config', 'G-P0RR1V030Z');
-    </script> -->
+    <title>Infoportal - new question</title>
 </svelte:head>
+<svelte:document>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-P0RR1V030Z');
+    </script>
+</svelte:document>
+
 
 <page-container>
   <slot />

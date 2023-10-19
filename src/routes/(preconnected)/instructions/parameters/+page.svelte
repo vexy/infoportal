@@ -1,3 +1,21 @@
+<svelte:head>
+    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
+    <meta name="keywords" content="configuration, parameters, mumbai, rpc, blockchain, symbol, url, help, infoportal">
+
+    <title>Infoportal - configuration parameters</title>
+</svelte:head>
+<svelte:document>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-P0RR1V030Z');
+    </script>
+</svelte:document>
+
 <script lang="ts">
     import { goto } from "$app/navigation";
 
@@ -109,7 +127,7 @@
     }
 
     thead {
-        background-color: #7d7d7c;
+        background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
     }
 
     td, th {

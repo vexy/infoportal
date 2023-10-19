@@ -6,9 +6,9 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 
-		<meta name="viewport" content="width=device-width initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="author" content="https://github.com/vexy" />
-		<meta name="description" content="Infoportal.app - Place to publish your questions, answers or your opinions... Blockchain based." />
+		<meta name="description" content="Infoportal.app - Place to publish your questions, answers or your opinions. Blockchain based." />
 		<meta name="keywords" content="polygon, vexy, MATIC, vote, blockchain, github, open, source, typescript, solidity, mumbai, dao, opinions, poll, statistics, question, stats, statistics" />
 
 		<!-- ICONS -->
@@ -20,24 +20,31 @@
 		/>
 
 		<!-- GENERAL STYLESHEET -->
-		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" crossorigin /> -->
-		<link rel="stylesheet" type="text/css" href="../src/styles/main.css"/>
-		<link rel="stylesheet" type="text/css" href="../src/styles/buttons.css"/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" crossorigin />
+		<link rel="stylesheet" type="text/css" href="/src/styles/main.css"/>
+		<link rel="stylesheet" type="text/css" href="/src/styles/buttons.css"/>
+
+		<!-- LINK PREVIEWS -->
+		<meta property="og:url"           content="https://infoportal.app/" />
+		<meta property="og:type"          content="website" />
+		<meta property="og:title"         content="Infoportal.app" />
+		<meta property="og:description"   content="Where everyone's opinion counts. Blockchain based." />
+		<meta property="og:image"         content="https://infoportal.app/favicon.ico" />
 
 		%sveltekit.head%
 	</head>
 
 	<!-- Google analytics setup -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
-	<!-- <script>
+	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 
 		gtag('config', 'G-P0RR1V030Z');
-	</script> -->
+	</script>
 	
-	<body>
-		%sveltekit.body%
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

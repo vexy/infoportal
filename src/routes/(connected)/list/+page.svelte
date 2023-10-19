@@ -1,7 +1,3 @@
-<svelte:head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,300,0,0" />
-</svelte:head>
-
 <script lang="ts">
     import QuestionsTable from "$lib/components/QuestionsTable.svelte";
     import Loader from '$lib/components/Loader.svelte';
@@ -243,7 +239,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        /* text-align: center; */
+        text-align: center;
         gap: 1em;
         height: 100%;
     }

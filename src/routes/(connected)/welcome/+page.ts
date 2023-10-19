@@ -5,15 +5,15 @@ import { redirect } from "@sveltejs/kit";
 
 export const load = (async () => {
     // check if we have provider and redirect otherwise
-    if(!Provider.isConnected()) {
+    if(Provider.isConnected()) {
+        // check if user is already registered, if so redirect directly to list page
+        const isRegistered = await Contract.isRegisteredUser();
+        if(isRegistered) {
+            console.log("Already registered, redirecting to /list");
+            throw redirect(303, '/list');
+        }
+    } else {
         console.log("Unable to access without Provider. Redirecting...");
         throw redirect(307, '/connect');
-    }
-
-    // check if user is already registered, if so redirect directly to list page
-    const isRegistered = await Contract.isRegisteredUser();
-    if(isRegistered) {
-        console.log("Already registered, redirecting to /list");
-        throw redirect(303, '/list');
     }
 }) satisfies PageLoad;

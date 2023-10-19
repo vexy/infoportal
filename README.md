@@ -1,7 +1,7 @@
 # Voting platform frontend
 Frontend component of the _distributed voting platform_ project, written in `TypeScript` with `SvelteKit` framework.  
 
-Platform version: `v1.5`  
+Platform version: `v1.7`  
 Platform URL: `https://infoportal.app`
 
 ## Base features

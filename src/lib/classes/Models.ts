@@ -35,12 +35,27 @@ export class QuestionInfoOutput {
 export class ScoresTransformer {
     public scoresRatio: number[] = [];
     public extrasRatio: number[] = [];
+    public shareText = '';
 
     constructor(questionInfo: QuestionInfoOutput) {
-        // calculate scores vs total voters for each vote option
-        this.scoresRatio = questionInfo.question.scores.map((aScore) => {
-            return (aScore / questionInfo.totalVoters) * 100;
-        })
+        let maxScoreRatio = 0;
+        let maxScoreLabel = '';
+
+        // calculate score vs total voters and max score
+        for(let idx = 0; idx < questionInfo.question.scores.length; idx++) {
+            // calculate scores vs total voters
+            const scoreRatio = (questionInfo.question.scores[idx] / questionInfo.totalVoters) * 100;
+            this.scoresRatio.push(scoreRatio);
+
+            // check for biggest score and coresponding label
+            if(scoreRatio > maxScoreRatio) {
+                maxScoreRatio = scoreRatio;
+                maxScoreLabel = questionInfo.question.labels[idx];
+            }
+        }
+        //
+        this.shareText = this.formulateShareText(questionInfo.question.title, maxScoreRatio, maxScoreLabel);
+
         // calculate extras vs total voters for each extra option
         this.extrasRatio = questionInfo.question.extras.map((extraScore) => {
             return (extraScore / questionInfo.totalVoters) * 100;
@@ -50,15 +65,9 @@ export class ScoresTransformer {
     /**
      * @returns String containing text ready to be shared on social medias
      */
-    public formulateShareText(questionInfo: QuestionInfoOutput): string {
-        // get max score ratio
-        const maxScoreRatio = Math.max(...this.scoresRatio);
-
-        // pull out corresponding label index
-        const maxIndex = this.scoresRatio.findIndex((v) => {v === maxScoreRatio});
-        const topAnswerLabel = questionInfo.question.labels[maxIndex];
-        
-        return `Na pitanje '${questionInfo.question.title}' ${maxScoreRatio}% korisnika odgovara sa '${topAnswerLabel}'. Izvor: infoportal.app`;
+    public formulateShareText(title: string, topScore: number, topOption: string): string {
+        const roundedScore = topScore.toFixed(1);
+        return `Na pitanje "${title}" ${roundedScore}% korisnika platforme odgovara sa '${topOption}'.\n\nIzvor: https://infoportal.app`;
     }
 }
 
