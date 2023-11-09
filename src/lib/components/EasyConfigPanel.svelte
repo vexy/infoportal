@@ -1,8 +1,6 @@
 <script lang="ts">
     import { ProviderCommons } from "$lib/classes/Provider";
-
-    // define static assets
-    const polygon_logo = new URL('./assets/polygon.png', import.meta.url).href
+    import polygon_logo from "$lib/assets/polygon.png"
 
     let isExpanded: boolean = false;
 

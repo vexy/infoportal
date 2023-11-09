@@ -86,6 +86,7 @@
 
     async function refreshScores() {
         // close the dialog and perform page invalidation
+        showAdditionalOptions = false;
         showDialog(false);
         isLoadingQuestion = true;
         await invalidateAll();

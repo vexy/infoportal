@@ -21,7 +21,7 @@
 
 .back-button {
     min-width: 85px;
-    min-height: 3em;
+    min-height: 2.5em;
     margin-block: 0.75em;
     font-weight: bold;
     cursor: pointer;
@@ -47,4 +47,20 @@
     border: none;
     border-radius: 1em;
     background-color: #a6a6a6;
+}
+
+.onboard-button {
+    margin-top: 2.5em;
+    padding: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(36, 36, 211, 0.9);
+    color: #cbdcbd;
+    cursor: help;
+    transition: box-shadow 0.45s, color 1.25s ease-out;
+}
+.onboard-button:hover {
+    box-shadow: 0px -1px 3px 1px #908e92,
+                0px 1px 3px 1px #8b01db;
+    color: #fff;
 }

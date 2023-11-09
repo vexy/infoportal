@@ -11,6 +11,9 @@
         }(document, 'script', 'facebook-jssdk'));
     </script>
 </svelte:head>
+<script lang="ts">
+    import gh_logo from "$lib/assets/github-mark.svg";
+</script>
 
 <div id="fb-root"></div>
 <footer>
@@ -35,7 +38,7 @@
 
     <links>
         <div>
-            <img src="/src/assets/github/github-mark.svg" alt="gh_logo"/>
+            <img src={gh_logo} alt="gh_logo"/>
             <a href="https://github.com/vexy" target="_blank">Аутор платформе</a>
         </div>
         <span><a href="/terms">Услови коришћења</a></span>
@@ -46,10 +49,8 @@
     <version-box>
         <span>Version:</span>
         <code>
-            <span class="material-symbols-outlined">
-                code
-            </span>
-            <a href="https://github.com/vexy/infoportal" target="_blank">1.7</a>
+            <span class="material-symbols-outlined">code</span>
+            <a href="https://github.com/vexy/infoportal" target="_blank">1.7.1</a>
         </code>
     </version-box>
 </footer>
@@ -69,7 +70,7 @@
 
     p {
         margin: unset;
-        padding-inline: 0.5em;
+        padding-inline: 0.85em;
         font-weight: 400;
         border: none;
         border-radius: 1em;

@@ -99,7 +99,7 @@
     function openQuestion(event: Event) {
         const questionID = extractEventValue(event);
         const questionRoute = `/questions/${questionID}`;
-        goto(questionRoute, {noScroll: true, keepFocus: true});
+        goto(questionRoute);
     }
 
     // fetches all data from the contract

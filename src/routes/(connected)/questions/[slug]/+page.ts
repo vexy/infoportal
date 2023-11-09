@@ -14,7 +14,7 @@ export const load = (async ({ params }) => {
                 questionInfo: questionData
             };
         } catch {
-            //TODO: RENDER ERROR PAHE
+            //TODO: RENDER ERROR PAGE HERE
             console.error("Error occured while loading questionID: ", params.slug);
         }
     }

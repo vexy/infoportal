@@ -21,7 +21,9 @@
     import { showDialog } from "$lib/classes/DialogUtilities";
     import { goto } from "$app/navigation";
 
-    const metamask_logo = new URL('../../../assets/metamask.svg', import.meta.url).href
+    // image imports
+    import metamask_logo from "$lib/assets/metamask.svg";
+    import polygon_logo from "$lib/assets/polygon.png";
 
     // MetaMask requires requesting permission to connect users accounts
     async function connectMetamask() {
@@ -40,7 +42,7 @@
     <header>Конекција не успешна</header>
     <section>
         <p>Дошло је до грешке приликом повезивања новчаника.</p>
-        <p>Више детаља о повезивању на платформу можете <a href='/instructions'>видети овде</a>.</p>
+        <p>Више детаља о повезивању на платформу можете <a href='/onboarding'>видети овде</a>.</p>
     </section>
     <footer>
         <button class="dialog-close-button" on:click={() => showDialog(false)}>
@@ -60,11 +62,21 @@
     <span>Повежи MetaMask</span>
 </button>
     
-<p>За почетак употребе, повежите Ваш <i>MetaMask</i> новчаник, или погледајте <a href="/instructions">упутства за повезивање</a>.</p>
-<p><a href="/terms">Услови коришћења</a></p>
+<!-- <p>За почетак употребе, повежите Ваш <i>MetaMask</i> новчаник...</p> -->
+<help-section>
+    <span class="material-symbols-outlined">help</span>
+    <a href="/onboarding">Упутства за приступање платформи</a>
+</help-section>
+
+<page-footer>
+    <p>Powered by <code>blockchain</code> system</p>
+    <p>Published at <img src={polygon_logo} height="10px" alt="polygon_mumbai"/> Polygon Mumbai</p>
+</page-footer>
 
 <style>
     h1 {
+        margin-top: auto;
+        margin-bottom: none;
         opacity: 0;
         animation: showUp;
         animation-delay: 100ms;
@@ -81,14 +93,12 @@
         display: flex;
         justify-content: space-evenly;
         font-size: smaller;
-        /* font-variant: small-caps; */
 
         opacity: 0;
         animation: showUp;
         animation-delay: 3.75s;
         animation-duration: 2s;
         animation-fill-mode: forwards;
-        /* padding: 1rem; */
         padding-bottom: 1rem;
         width: 90vw;
     }
@@ -104,9 +114,38 @@
         text-align: center;
     }
 
-    /* div {
-        align-self: center;
-    } */
+    page-footer {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: auto;
+    }
+
+    page-footer p {
+        font-size: 11px;
+        text-shadow: 1px -1px 3px #fff;
+        color: #4f4f4f;
+    }
+
+    help-section {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        /* border: 1.25px solid #4f4f4f;
+        border-radius: 10px; */
+        padding: 1.5em;
+        margin-top: 2em;
+        opacity: 0;
+        animation-name: showUp;
+        animation-delay: 2.15s;
+        animation-duration: 0.65s;
+        animation-fill-mode: forwards;
+    }
+    help-section:hover {
+        color: #fff;
+        /* box-shadow: 1px -1px 5px 2px #fff; */
+        /* border: 1.25px solid #3c3c3c3c; */
+    }
 
     .metamask-button {
         opacity: 0;

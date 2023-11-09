@@ -1,21 +1,3 @@
-<svelte:head>
-    <meta name="description" content="Infoportal.app | Your questions, your answers, your opinions." />
-    <meta name="keywords" content="configuration, parameters, mumbai, rpc, blockchain, symbol, url, help, infoportal">
-
-    <title>Infoportal - configuration parameters</title>
-</svelte:head>
-<svelte:document>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RR1V030Z"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        
-        gtag('config', 'G-P0RR1V030Z');
-    </script>
-</svelte:document>
-
 <script lang="ts">
     import { goto } from "$app/navigation";
 
@@ -51,8 +33,6 @@
         }, 1500 );
     }
 </script>
-
-<h2 style="text-align: center;">Параметри приступа Polygon Mumbai мрежи</h2>
 
 <table>
     <thead>
@@ -117,7 +97,7 @@
     <span>Параметри конфигурације успешно копирани</span>
 </success-toast>
 
-<button class="back-button" on:click={() => { goto('/instructions') }}>Назад</button>
+<p>За више информација о додавању нових мрежа у MetaMask, <a href="https://support.metamask.io/hc/en-us/articles/360043227612-How-to-add-a-custom-network-RPC" target="_blank">погледајте официјелну документацију</a>.</p>
 
 <style>
     table {
